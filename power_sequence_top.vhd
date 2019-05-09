@@ -1,19 +1,19 @@
 ----------------------------------------------------------------------------------
--- Company: 
--- Engineer: 
+-- Company: Pollution Control Technologies
+-- Engineer: Mehmet S KAYA
 -- 
--- Create Date: 05/09/2019 12:54:25 AM
--- Design Name: 
--- Module Name: power_sequence_top - Behavioral_Top
--- Project Name: 
--- Target Devices: 
--- Tool Versions: 
--- Description: 
+-- Create Date: 06/20/2018 01:02:01 PM
+-- Design Name: Power Sequence
+-- Module Name: power_sequence_top - Behavioral
+-- Project Name: High Speed Camera
+-- Target Devices: ZedBoard
+-- Tool Versions: Vivado 2016.4
+-- Description: Power Sequence of the image sensor
 -- 
 -- Dependencies: 
 -- 
--- Revision:
--- Revision 0.01 - File Created
+-- Revision: 
+-- Revision 0.00 - File Created
 -- Additional Comments:
 -- 
 ----------------------------------------------------------------------------------

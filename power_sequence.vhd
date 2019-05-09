@@ -4,7 +4,7 @@
 -- 
 -- Create Date: 06/20/2018 01:02:01 PM
 -- Design Name: Power Sequence
--- Module Name: power_up - Behavioral
+-- Module Name: power_sequence - Behavioral
 -- Project Name: High Speed Camera
 -- Target Devices: ZedBoard
 -- Tool Versions: Vivado 2016.4

@@ -30,7 +30,8 @@ entity power_sequence is
            Enable_VDD_pix : out STD_LOGIC;
            clk_en : out STD_LOGIC;
            reset_en : out STD_LOGIC;
-           spi_upload : out STD_LOGIC);
+           spi_upload : out STD_LOGIC;
+           out_StopCount : out STD_LOGIC);
 end power_sequence;
 
 architecture Behavioral of power_sequence is
@@ -42,10 +43,23 @@ signal StopCount :std_logic := '1';
 begin
 
 sw_in <= sw;
+out_StopCount <= StopCount;
  
 process  (clk_in,StopCount,sw_in)
 
 begin 
+    
+    if falling_edge(sw_in) then
+    
+    StopCount <= '0';
+    counter <= 0;
+    
+    elsif rising_edge(sw_in) then
+        
+    StopCount <= '1';
+    counter <= 0;
+    
+    end if;
     
     if rising_edge(clk_in) then    
                 
@@ -107,7 +121,7 @@ begin
                 clk_en <= '1';
                 reset_en <= '1';
                 spi_upload <= '1';                
-                           
+
                 else
                 counter <= 0;
                 C5514_enable <= '0';
@@ -120,8 +134,10 @@ begin
                 
                 end if;
    
-      end if;
+        end if;
+        
+
 
 end process;
      
-end Behavioral;    
+end Behavioral;

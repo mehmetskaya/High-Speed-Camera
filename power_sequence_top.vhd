@@ -1,19 +1,19 @@
 ----------------------------------------------------------------------------------
--- Company: Pollution Control Technologies
--- Engineer: Mehmet S KAYA
+-- Company: 
+-- Engineer: 
 -- 
--- Create Date: 06/20/2018 01:02:01 PM
--- Design Name: Power Sequence
--- Module Name: power_sequence_top - Behavioral
--- Project Name: High Speed Camera
--- Target Devices: ZedBoard
--- Tool Versions: Vivado 2016.4
--- Description: Power Sequence of the image sensor
+-- Create Date: 05/09/2019 12:54:25 AM
+-- Design Name: 
+-- Module Name: power_sequence_top - Behavioral_Top
+-- Project Name: 
+-- Target Devices: 
+-- Tool Versions: 
+-- Description: 
 -- 
 -- Dependencies: 
 -- 
--- Revision: 
--- Revision 0.00 - File Created
+-- Revision:
+-- Revision 0.01 - File Created
 -- Additional Comments:
 -- 
 ----------------------------------------------------------------------------------
@@ -34,7 +34,7 @@ use IEEE.STD_LOGIC_1164.ALL;
 entity power_sequence_top is
     Port ( GCLK : in STD_LOGIC;
            SW0 : in STD_LOGIC;
-           LD : out STD_LOGIC_VECTOR (6 downto 0));
+           LD : out STD_LOGIC_VECTOR (7 downto 0));
 end power_sequence_top;
 
 architecture Behavioral_Top of power_sequence_top is
@@ -49,7 +49,8 @@ component power_sequence is
          Enable_VDD_pix : out STD_LOGIC;
          clk_en : out STD_LOGIC;
          reset_en : out STD_LOGIC;
-         spi_upload : out STD_LOGIC
+         spi_upload : out STD_LOGIC;
+         out_StopCount : out STD_LOGIC
        );
 end component;
 
@@ -65,7 +66,8 @@ comp2 : power_sequence
      Enable_VDD_pix=> LD(3),
      clk_en=> LD(4),
      reset_en=> LD(5),
-     spi_upload=> LD(6)  
+     spi_upload=> LD(6), 
+     out_StopCount=> LD(7) 
    );
 
 end Behavioral_Top;

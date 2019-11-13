@@ -50,6 +50,7 @@ ARCHITECTURE behavior OF power_sequence_tb IS
          clk_en : OUT  std_logic;
          reset_en : OUT  std_logic;
          spi_upload : OUT  std_logic;
+			state_reg  : out STD_LOGIC_VECTOR ( 2 downto 0);
          out_StopCount : OUT  std_logic
         );
     END COMPONENT;
@@ -67,6 +68,7 @@ ARCHITECTURE behavior OF power_sequence_tb IS
    signal clk_en : std_logic;
    signal reset_en : std_logic;
    signal spi_upload : std_logic;
+	signal state_reg :STD_LOGIC_VECTOR ( 2 downto 0);
    signal out_StopCount : std_logic;
 
    -- Clock period definitions
@@ -85,6 +87,7 @@ BEGIN
           clk_en => clk_en,
           reset_en => reset_en,
           spi_upload => spi_upload,
+			 state_reg => state_reg,
           out_StopCount => out_StopCount
         );
 
@@ -155,8 +158,47 @@ BEGIN
 		wait for 20.1 ms;
 		wait for 20.1 ms;
 		wait for 20.1 ms;
+		sw <= '1';
+		wait for 20.1 ms;
+		wait for 20.1 ms;
+		wait for 20.1 ms;
+		wait for 20.1 ms;
+		wait for 20.1 ms;
+		wait for 20.1 ms;
+		wait for 20.1 ms;
+		wait for 20.1 ms;
+		wait for 20.1 ms;
+		sw <= 'U';
+		wait for 20.1 ms;
+		wait for 20.1 ms;
+		wait for 20.1 ms;
+		wait for 20.1 ms;
+		sw <= '1';
+		wait for 20.1 ms;
+		wait for 20.1 ms;
+		wait for 20.1 ms;
+		wait for 20.1 ms;
+		wait for 20.1 ms;
+		sw <= 'U';
+		wait for 20.1 ms;
+		wait for 20.1 ms;
+		wait for 20.1 ms;
+		wait for 20.1 ms;
+		sw <= '0';
+		wait for 20.1 ms;
+		wait for 20.1 ms;
+		wait for 20.1 ms;
+		wait for 20.1 ms;
+		wait for 20.1 ms;
+		wait for 20.1 ms;
+		wait for 20.1 ms;
+		wait for 20.1 ms;
+		wait for 20.1 ms;
 
-      wait;
+      assert false
+      report "simulation ended"
+      severity failure;
+		
    end process;
 
 END;

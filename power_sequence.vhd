@@ -156,8 +156,9 @@ begin
 	        elsif (sw_in = '1' and StopCount = '1') or (sw_in = '0' and StopCount = '0') then
 		      state <= power_up_seq;
                 end if;
-      
-	    end case;	 
+			
+	 end case;
+		 
   end if;
   
 end process;

@@ -13,7 +13,7 @@ Port (     clk_in         : in STD_LOGIC;
            clk_en         : out STD_LOGIC;
            reset_en       : out STD_LOGIC;
            spi_upload     : out STD_LOGIC;
-			  state_reg      : out STD_LOGIC_VECTOR ( 2 downto 0);
+	   state_reg      : out STD_LOGIC_VECTOR ( 2 downto 0);
            out_StopCount  : out STD_LOGIC
 		 );
 		 
@@ -44,9 +44,9 @@ begin
   
   
   if sw_in = '0' and StopCount = '1' then
-          state <= awake;
-			 state_rego <= "001";
-	             C5514_enable   <= '0';
+                state          <= awake;
+                state_rego     <= "001";
+	        C5514_enable   <= '0';
                 Enable_VDD_18  <= '0';
                 Enable_VDD_33  <= '0';
                 Enable_VDD_pix <= '0';
@@ -56,25 +56,27 @@ begin
 	  
   elsif clk_in'event and clk_in = '1' then
     
-	 case state is
+      case state is
 	 
-	    when awake =>
+	 when awake =>
+		 
            if sw_in = '1' then
-              state <= power_up_seq;
-				  state_rego <= "010";
-				  StopCount <= '0';
+                state <= power_up_seq;
+		state_rego <= "010";
+		StopCount <= '0';
            elsif sw_in = '0' then
-              state <=power_down ;
-				  state_rego <= "101";
+                state <=power_down ;
+		state_rego <= "101";
            end if;
 	 
-	    when power_down =>
-		      if sw_in = '1' then
-				    state <= power_up_seq;
-					 state_rego <= "010";
+	 when power_down =>
+		   
+	   if sw_in = '1' then
+	        state <= power_up_seq;
+		state_rego <= "010";
 	             
-	         elsif sw_in = '0' or sw_in = 'U' then
-				    counter        <= 0;
+	   elsif sw_in = '0' or sw_in = 'U' then
+		counter        <= 0;
                 C5514_enable   <= '0';
                 Enable_VDD_18  <= '0';
                 Enable_VDD_33  <= '0';
@@ -82,82 +84,78 @@ begin
                 clk_en         <= '0';
                 reset_en       <= '0';
                 spi_upload     <= '0';
-					 state <= power_down;
-					 state_rego <= "101";
-				end if;
+		state          <= power_down;
+		state_rego     <= "101";
+	    end if;
 				
-       when power_up_seq =>
-           if (sw_in = '0'  and StopCount = '0') or (sw_in = 'U'  and StopCount = '1') then
-			      state <= power_down_seq;
-					state_rego <= "100";
-					counter <= 0;
-			      StopCount <= '0';
+        when power_up_seq =>
+            if (sw_in = '0'  and StopCount = '0') or (sw_in = 'U'  and StopCount = '1') then
+		state      <= power_down_seq;
+		state_rego <= "100";
+		counter    <= 0;
+		StopCount  <= '0';
 		
-           else
-               counter <= counter + 1;
-                          
-                      case counter is
+            else
+                counter <= counter + 1;
+                case counter is
                            when 2000000 =>
-                               C5514_enable <= '1';
+                                C5514_enable <= '1';
                            when 4000000 =>
-                               Enable_VDD_18 <= '1';
+                                Enable_VDD_18 <= '1';
                            when 6000000 =>
-                               Enable_VDD_33 <= '1';
+                                Enable_VDD_33 <= '1';
                            when 8000000 =>
-                               Enable_VDD_pix <= '1';
+                                Enable_VDD_pix <= '1';
                            when 10000000=>
-                               clk_en <= '1';
+                                clk_en <= '1';
                            when 12000000=> 
-                               reset_en <= '1';
+                                reset_en <= '1';
                            when 14000000=>   
-                               spi_upload <= '1';
-										 StopCount <= '0';
-										 state <= power_on;
-										 state_rego <= "011";
-										 counter <= 0;
+                                spi_upload <= '1';
+			        StopCount <= '0';
+				state <= power_on;
+				state_rego <= "011";
+				counter <= 0;
                            when others =>
-                        end case;
-              
-           end if;
+                 end case;
+             end if;
 			  
-		 when power_down_seq =>
-           if (sw_in = '0' or sw_in = 'U') and StopCount = '0'   then
-			  
-			     counter <= counter + 1;
-                          
-                      case counter is
+	when power_down_seq =>
+             if (sw_in = '0' or sw_in = 'U') and StopCount = '0'   then
+		counter <= counter + 1;
+                case counter is
                            when 2000000 =>
-                               spi_upload <= '0';
+                                spi_upload <= '0';
                            when 4000000 =>
-                               reset_en <= '0';
+                                reset_en <= '0';
                            when 6000000 =>
-                               clk_en <= '0';
+                                clk_en <= '0';
                            when 8000000 =>
-                               Enable_VDD_pix <= '0';
+                                Enable_VDD_pix <= '0';
                            when 10000000 =>
-                               Enable_VDD_33 <= '0';
+                                Enable_VDD_33 <= '0';
                            when 12000000=>
-                               Enable_VDD_18 <= '0';
+                                Enable_VDD_18 <= '0';
                            when 14000000=>   
-                               C5514_enable <= '0';
-										 state <= power_down;
-										 state_rego <= "101";
-                               counter <= 0;
+                                C5514_enable <= '0';
+				state <= power_down;
+				state_rego <= "101";
+                                counter <= 0;
                           when others =>
-                       end case;
-           else
-              counter <= 0;
-				  StopCount <= '1';
-              state <= power_up_seq;
-				  state_rego <= "010";
-			  end if;  
+                end case;
+             else
+                counter <= 0;
+		StopCount <= '1';
+                state <= power_up_seq;
+		state_rego <= "010";
+	     end if;  
 				  
-		when power_on =>
-		      if sw_in = '0' or sw_in = 'U'  then
-	             state <= power_down_seq;
-					 state_rego <= "100";
-	         else
-				    counter        <= 0;
+	when power_on =>
+	     if sw_in = '0' or sw_in = 'U'  then
+	        state <= power_down_seq;
+		state_rego <= "100";
+	     else
+		counter        <= 0;
                 C5514_enable   <= '1';
                 Enable_VDD_18  <= '1';
                 Enable_VDD_33  <= '1';
@@ -165,21 +163,21 @@ begin
                 clk_en         <= '1';
                 reset_en       <= '1';
                 spi_upload     <= '1';
-				    state <= power_on;
-					 state_rego <= "011";
+		state <= power_on;
+		state_rego <= "011";
             end if;
 				
 				
        when others =>
-		      if (sw_in = '0' and StopCount = '1') or (sw_in = '1' and StopCount = '0') then
-	             state <= power_down_seq;
-					 state_rego <= "100";
-	         elsif (sw_in = '1' and StopCount = '1') or (sw_in = '0' and StopCount = '0') then
-				    state <= power_up_seq;
-					 state_rego <= "010";
+	    if (sw_in = '0' and StopCount = '1') or (sw_in = '1' and StopCount = '0') then
+	        state <= power_down_seq;
+		state_rego <= "100";
+	     elsif (sw_in = '1' and StopCount = '1') or (sw_in = '0' and StopCount = '0') then
+		state <= power_up_seq;
+		state_rego <= "010";
             end if;
       
-	 end case;
+       end case;
 	 
   end if;
   

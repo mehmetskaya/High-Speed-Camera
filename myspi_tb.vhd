@@ -1,19 +1,20 @@
-LIBRARY ieee;
-USE ieee.std_logic_1164.ALL;
+
+library IEEE;
+use IEEE.STD_LOGIC_1164.ALL;
  
 -- Uncomment the following library declaration if using
 -- arithmetic functions with Signed or Unsigned values
 --USE ieee.numeric_std.ALL;
  
-ENTITY myspi_tb IS
-END myspi_tb;
+entity myspi_tb is
+end myspi_tb;
  
-ARCHITECTURE behavior OF myspi_tb IS 
+architecture Behavioral of myspi_tb is
  
     -- Component Declaration for the Unit Under Test (UUT)
  
-    COMPONENT myspi
-    PORT(
+    component myspi
+    port(
          clk : IN  std_logic;
          sck : IN  std_logic;
          ss : IN  std_logic_vector(1 downto 0);
@@ -28,7 +29,7 @@ ARCHITECTURE behavior OF myspi_tb IS
          rx_do : OUT  std_logic_vector(7 downto 0);
          rx_full : OUT  std_logic
         );
-    END COMPONENT;
+    end component;
     
 
    --Inputs
@@ -52,10 +53,11 @@ ARCHITECTURE behavior OF myspi_tb IS
    -- Clock period definitions
    constant clk_period : time := 10 ns;
    constant sck_period : time := 200 ns;
-BEGIN
+   
+begin
  
 	-- Instantiate the Unit Under Test (UUT)
-   uut: myspi PORT MAP (
+   uut: myspi port map (
           clk => clk,
           sck => sck,
           ss => ss,
@@ -183,4 +185,4 @@ BEGIN
       
    end process;
 
-END;
+end;

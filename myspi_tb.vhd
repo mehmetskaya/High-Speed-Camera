@@ -86,99 +86,101 @@ begin
    
    stim_proc_rising: process
    begin	 
-      wait for 200ns;
+      wait for sck_period;
       reset_n <= '0';
       sck<='0';
-      wait for 200ns;
+      wait for sck_period;
       reset_n <= '1';
       
-      wait for 200ns;
+      wait for sck_period;
       reset_n <= '0';
-      wait for 200ns;
+      wait for sck_period;
       ss <= "00";
-      wait for 400ns;
+      wait for sck_period;
       
-
-      di <= "11111001";
-      wait for 200ns;
+      wait for sck_period;
+      di <= "11110010";
+      wait for sck_period;
       for i in 1 to 8 loop
-        mosi <= di(8-i);
-        sck<='1';
-        wait for 100ns;
-        sck<='0'; 
-        wait for 100ns;
+        mosi <= di(8-i); 
+        wait for sck_period/2;
+        sck<='1'; 
+        wait for sck_period/2;
+        sck<='0';
       end loop;
       rx_rd <= '1';
       tx_wr <= '1';
+      tx_di <= "11101001";
+      mosi <= '0';
+      wait for clk_period;
+      rx_rd <= '0';
+      tx_wr <= '0';
+      wait for sck_period;
+            
+      wait for sck_period;
+      di <= "10011001";
+      wait for sck_period;
+      for i in 1 to 8 loop
+        mosi <= di(8-i); 
+        wait for sck_period/2;
+        sck<='1'; 
+        wait for sck_period/2;
+        sck<='0';
+      end loop;
+      rx_rd <= '0';
+      tx_wr <= '0';
       tx_di <= "10001111";
       mosi <= '0';
       wait for clk_period;
       rx_rd <= '0';
       tx_wr <= '0';
-      wait for 400ns;
-            
-      di <= "01101011";
-      wait for 200ns;
+      wait for sck_period;
+      
+      wait for sck_period;
+      di <= "11011011";
+      wait for sck_period;
       for i in 1 to 8 loop
-        mosi <= di(8-i);
-        sck<='1';
-        wait for 100ns;
-        sck<='0'; 
-        wait for 100ns;
+        mosi <= di(8-i); 
+        wait for sck_period/2;
+        sck<='1'; 
+        wait for sck_period/2;
+        sck<='0';
       end loop;
       rx_rd <= '0';
       tx_wr <= '1';
-      tx_di <= "01001101";
+      tx_di <= "11001011";
       mosi <= '0';
       wait for clk_period;
       rx_rd <= '0';
       tx_wr <= '0';
-      wait for 400ns;
+      wait for sck_period;
       
-      di <= "10101001";
-      wait for 200ns;
+      wait for sck_period;
+      di <= "10101011";
+      wait for sck_period;
       for i in 1 to 8 loop
-        mosi <= di(8-i);
-        sck<='1';
-        wait for 100ns;
-        sck<='0'; 
-        wait for 100ns;
+        mosi <= di(8-i); 
+        wait for sck_period/2;
+        sck<='1'; 
+        wait for sck_period/2;
+        sck<='0';
       end loop;
       rx_rd <= '1';
       tx_wr <= '0';
-      tx_di <= "00000000";
+      tx_di <= "10010111";
       mosi <= '0';
       wait for clk_period;
       rx_rd <= '0';
       tx_wr <= '0';
-      wait for 400ns;
-      
-      di <= "10101001";
-      wait for 200ns;
-      for i in 1 to 8 loop
-        mosi <= di(8-i);
-        sck<='1';
-        wait for 100ns;
-        sck<='0'; 
-        wait for 100ns;
-      end loop;
-      rx_rd <= '0';
-      tx_wr <= '0';
-      tx_di <= "00000000";
-      mosi <= '0';
-      wait for clk_period;
-      rx_rd <= '0';
-      tx_wr <= '0';
-      wait for 400ns;
+      wait for sck_period;
       
       ss <= "01";
-      wait for 200ns;
+      wait for sck_period;
       ss <= "00";
-      wait for 200ns;
+      wait for sck_period;
+      
       reset_n <= '1';
-      
-      
-      wait for 200ns;
+      wait for sck_period;
       assert false
       report "Simulation Ended"
       severity failure;

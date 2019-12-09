@@ -35,6 +35,13 @@ signal bit_cnt : integer:=0 ;
 signal sck_cnt : integer:=0;
 signal rx_is_full : STD_LOGIC;
 signal tx_is_empty : STD_LOGIC;
+signal sckd        :std_logic;
+signal sckdd       :std_logic;
+signal filter_sck    :std_logic;
+signal filter_sckd   :std_logic;
+signal mosid       :std_logic;
+signal mosidd      :std_logic;
+signal filter_mosi    :std_logic;
 
 type state_type is(off,sleep,awake,ready,shifting,done);
 
@@ -60,8 +67,28 @@ begin
   sck_hi <= 'Z';
   tx_is_empty <= 'Z';
   rx_is_full <= 'Z';
+
   
   elsif clk'event and clk = '1' then
+  
+  sckd<=sck;
+  sckdd<=sckd;
+  filter_sckd<=filter_sck;
+  
+    if sckd='1' and sckdd='1' then
+      filter_sck<='1';
+    elsif sckd='0' and sckdd='0' then
+      filter_sck<='0';
+    end if;
+    
+  mosid<=mosi;
+  mosidd<=mosid;
+  
+    if mosid='1' and mosidd='1' then
+      filter_mosi<='1';
+    elsif mosid='0' and mosidd='0' then
+      filter_mosi<='0';
+    end if;
   
   case state is
   
@@ -78,11 +105,14 @@ begin
   end if;
   
   when awake =>
+  
   if reset_n = '0' then
    if ss = "00" then
    sck_cnt <= 0;
    bit_cnt <= 0;
    state <= ready;
+   miso <= tx_reg(7);
+   filter_mosi <= '0';
    else
    state <= awake;
    end if;
@@ -93,10 +123,9 @@ begin
 
   when ready =>
   if ss = "00" then
-   if sck'event and sck='1' then
-   rx_reg(0)<= mosi;
+   if (filter_sck='1' and filter_sckd='0') then
+   rx_reg(0)<= filter_mosi;
    bit_cnt <= 1;
-   tx_is_empty <= '0';
    sck_hi <= '1';
    state <= shifting;
    else
@@ -108,35 +137,37 @@ begin
   
   when shifting =>
   sck_cnt <= sck_cnt + 1;
-  if sck'event and sck='1' then
+  if (filter_sck='1' and filter_sckd='0')and bit_cnt/=8 then
   bit_cnt <= bit_cnt + 1;
   sck_cnt <= 0;
   miso <= tx_reg(7);
   tx_reg <= tx_reg ( 6 downto 0) & '0';
-  rx_reg <= rx_reg ( 6 downto 0) & mosi;
+  rx_reg <= rx_reg ( 6 downto 0) & filter_mosi;
   end if;
-  if bit_cnt=8 and sck_cnt = 19 then
-  sck_cnt <= 0;
-  sck_hi <= '0';
-  bit_cnt <= 0;
+  if bit_cnt=8 and sck_cnt=19 then
+    state <= done;
+  else
+    if bit_cnt=8 and tx_is_empty = '0' then 
+    tx_is_empty <= '1';
+    end if;
     if rx_rd = '1' then
     rx_is_full <= '1';
     rx_do <= rx_reg;
     state <= done;
     end if;
     if tx_wr = '1' then
-    tx_is_empty <= '1';
     tx_reg <= tx_di( 6 downto 0) & '0';
+    tx_is_empty <= '0';
     miso <= tx_di(7);
-    state <= done;
-    else
-    miso <= '0';
     state <= done;
     end if;
   end if;
 
   when done =>
   state <= awake;
+  sck_cnt <= 0;
+  sck_hi <= '0';
+  bit_cnt <= 0;
   rx_is_full <= '0';
  
   when others =>

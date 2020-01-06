@@ -97,6 +97,8 @@ begin
 		
             else
                 counter <= counter + 1;
+                -- every 2 000 000 count is equal to 20ms for clk of 10ns. 
+                -- count of 14 000 000 is equal to 1101 0101 1001 1111 1000 0000 in binary 
                 case counter is
                            when 2000000 =>
                                 C5514_enable <= '1';
@@ -123,6 +125,8 @@ begin
 	when power_down_seq =>
              if (sw_in = '0' or sw_in = 'U') and StopCount = '0'   then
 		counter <= counter + 1;
+	        -- every 2 000 000 count is equal to 20ms for clk of 10ns. 
+                -- count of 14 000 000 is equal to 1101 0101 1001 1111 1000 0000 in binary     
                 case counter is
                            when 2000000 =>
                                 spi_upload <= '0';

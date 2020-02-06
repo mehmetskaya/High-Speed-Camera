@@ -78,7 +78,8 @@ begin
 
    -- Stimulus process
    stim_proc: process
-   begin		
+   begin
+
       sw <= '1';
       wait for 4*on_time;
       en <= '0';
@@ -88,39 +89,38 @@ begin
       wait for 4*on_time;
       sw <= '1';
       wait for 9*on_time;
-		sw <= '0';
-		wait for 9*on_time;
-		sw <= '1';
-		wait for 5*on_time;
-		sw <= '0';
-		wait for 5*on_time;
-		sw <= '1';
-		wait for 6*on_time;
-		sw <= 'U';
+      sw <= '0';
+      wait for 9*on_time;
+      sw <= '1';
+      wait for 5*on_time;
+      sw <= '0';
+      wait for 5*on_time;
+      sw <= '1';
+      wait for 6*on_time;
+      sw <= 'U';
       wait for 5*on_time;
       en <= '0';
-		wait for 5*on_time;
-		sw <= '0';
-		wait for 5*on_time;
-		sw <= '1';
-		wait for 6*on_time;      
+      wait for 5*on_time;
+      sw <= '0';
+      wait for 5*on_time;
+      sw <= '1';
+      wait for 6*on_time;      
       en <= '1';
       wait for 5*on_time;
-		sw <= '1';
-		wait for 9*on_time;
-		sw <= 'U';
-		wait for 4*on_time;
-		sw <= '1';
-		wait for 6*on_time;
-		sw <= 'U';
-		wait for 5*on_time;
-		sw <= '0';
-		wait for 9*on_time;
+      sw <= '1';
+      wait for 9*on_time;
+      sw <= 'U';
+      wait for 4*on_time;
+      sw <= '1';
+      wait for 6*on_time;
+      sw <= 'U';
+      wait for 5*on_time;
+      sw <= '0';
+      wait for 9*on_time;
 
       assert false
       report "simulation ended"
       severity failure;
-		
+	
    end process;
-
 end;

@@ -1,30 +1,3 @@
---------------------------------------------------------------------------------
--- Company: 
--- Engineer:
---
--- Create Date:   13:37:54 11/13/2019
--- Design Name:   
--- Module Name:   Y:/Sirac/FPGA_research/power_up/power_sequence_tb.vhd
--- Project Name:  power_up
--- Target Device:  
--- Tool versions:  
--- Description:   
--- 
--- VHDL Test Bench Created by ISE for module: power_up
--- 
--- Dependencies:
--- 
--- Revision:
--- Revision 0.01 - File Created
--- Additional Comments:
---
--- Notes: 
--- This testbench has been automatically generated using types std_logic and
--- std_logic_vector for the ports of the unit under test.  Xilinx recommends
--- that these types always be used for the top-level I/O of a design in order
--- to guarantee that the testbench will bind correctly to the post-implementation 
--- simulation model.
---------------------------------------------------------------------------------
 LIBRARY ieee;
 USE ieee.std_logic_1164.ALL;
  
@@ -41,8 +14,9 @@ architecture behavior of power_sequence_tb is
  
     component power_sequence
     port(
-         clk_in : IN  std_logic;
+         clk : IN  std_logic;
          sw : IN  std_logic;
+         en : IN  std_logic;
          C5514_enable : OUT  std_logic;
          Enable_VDD_18 : OUT  std_logic;
          Enable_VDD_33 : OUT  std_logic;
@@ -50,15 +24,15 @@ architecture behavior of power_sequence_tb is
          clk_en : OUT  std_logic;
          reset_en : OUT  std_logic;
          spi_upload : OUT  std_logic;
-			state_reg  : out STD_LOGIC_VECTOR ( 2 downto 0);
          out_StopCount : OUT  std_logic
         );
     end component;
     
 
    --Inputs
-   signal clk_in : std_logic;
+   signal clk : std_logic;
    signal sw : std_logic ;
+   signal en : std_logic ;
 
  	--Outputs
    signal C5514_enable : std_logic;
@@ -68,11 +42,10 @@ architecture behavior of power_sequence_tb is
    signal clk_en : std_logic;
    signal reset_en : std_logic;
    signal spi_upload : std_logic;
-	signal state_reg :STD_LOGIC_VECTOR ( 2 downto 0);
    signal out_StopCount : std_logic;
 
    -- Clock period definitions
-   constant clk_in_period : time := 10 ns;
+   constant clk_period : time := 10 ns;
    constant on_time : time := 20 ms;
    
  
@@ -80,8 +53,9 @@ begin
  
 	-- Instantiate the Unit Under Test (UUT)
    uut: power_sequence PORT MAP (
-          clk_in => clk_in,
+          clk => clk,
           sw => sw,
+          en => en,
           C5514_enable => C5514_enable,
           Enable_VDD_18 => Enable_VDD_18,
           Enable_VDD_33 => Enable_VDD_33,
@@ -89,27 +63,29 @@ begin
           clk_en => clk_en,
           reset_en => reset_en,
           spi_upload => spi_upload,
-			 state_reg => state_reg,
           out_StopCount => out_StopCount
         );
 
    -- Clock process definitions
-   clk_in_process :process
+   clk_process :process
    begin
-		clk_in <= '0';
-		wait for clk_in_period/2;
-		clk_in <= '1';
-		wait for clk_in_period/2;
+		clk <= '0';
+		wait for clk_period/2;
+		clk <= '1';
+		wait for clk_period/2;
    end process;
  
 
    -- Stimulus process
    stim_proc: process
    begin		
-      
-      wait for on_time;	
+      sw <= '1';
+      wait for 4*on_time;
+      en <= '0';
       sw <= '0';
-      wait for on_time;
+      wait for 4*on_time;
+      en <= '1';
+      wait for 4*on_time;
       sw <= '1';
       wait for 9*on_time;
 		sw <= '0';
@@ -121,7 +97,15 @@ begin
 		sw <= '1';
 		wait for 6*on_time;
 		sw <= 'U';
-		wait for 9*on_time;
+      wait for 5*on_time;
+      en <= '0';
+		wait for 5*on_time;
+		sw <= '0';
+		wait for 5*on_time;
+		sw <= '1';
+		wait for 6*on_time;      
+      en <= '1';
+      wait for 5*on_time;
 		sw <= '1';
 		wait for 9*on_time;
 		sw <= 'U';

@@ -25,7 +25,7 @@ architecture Behavioral of power_sequence is
 signal sw_in : STD_LOGIC;
 signal en_in : STD_LOGIC;
 signal counter : integer :=0;
-signal enable_pins : integer :=0;
+signal enable_pins :STD_LOGIC_VECTOR ( 2 downto 0);
 signal StopCount :STD_LOGIC;
 
 type state_type is(sleep,awake,ready,power_up_seq,onn,power_down_seq,off);
@@ -54,6 +54,7 @@ begin
        clk_en         <= '0';
        reset_en       <= '0';
        spi_upload     <= '0';
+       enable_pins    <= (others => '0');
      
    elsif clk'event and clk = '1' then
     
@@ -69,7 +70,8 @@ begin
       when ready =>
          if en_in = '1' then
             if sw_in = '1' then
-               state <= power_up_seq; 
+               state <= power_up_seq;
+               StopCount <= '0';  
             else 
                state <=off ;
             end if;
@@ -125,31 +127,31 @@ begin
             if (sw_in = '0'  or sw_in = 'U') then
                state <= power_down_seq;
                counter <= 0;
-               enable_pins <= 8-enable_pins;
+               enable_pins    <= ("111"-enable_pins)+'1';
             else
                counter <= counter + 1;
                   if counter = 2000000 then
-                     enable_pins <= enable_pins + 1;
+                     enable_pins <= enable_pins + '1';
                      counter <= 0;
                   end if;
                   -- every 2 000 000 count is equal to 20ms for clk of 10ns.          
                   case enable_pins is
-                     when 1 =>
+                     when "001" =>
                          C5514_enable <= '1';
-                     when 2 =>
+                     when "010" =>
                          Enable_VDD_18 <= '1';
-                     when 3 =>
+                     when "011" =>
                          Enable_VDD_33 <= '1';
-                     when 4 =>
+                     when "100" =>
                          Enable_VDD_pix <= '1';
-                     when 5 =>
+                     when "101" =>
                          clk_en <= '1';
-                     when 6 => 
+                     when "110" => 
                          reset_en <= '1';
-                     when 7 =>   
+                     when "111" =>   
                          spi_upload <= '1';
                          state <= onn;
-                         enable_pins <= 0;
+                         enable_pins    <= (others => '0');
                          counter <= 0;
                      when others =>
                   end case;
@@ -164,34 +166,34 @@ begin
             if (sw_in = '0' or sw_in = 'U')then
                counter <= counter + 1;
                   if counter = 2000000 then
-                  enable_pins <= enable_pins + 1;
+                  enable_pins <= enable_pins + '1';
                   counter <= 0;
                   end if;
                   -- every 2 000 000 count is equal to 20ms for clk of 10ns.             
                   case enable_pins is
-                     when 1 =>
+                     when "001" =>
                          spi_upload <= '0';
-                     when 2 =>
+                     when "010" =>
                          reset_en <= '0';
-                     when 3 =>
+                     when "011" =>
                          clk_en <= '0';
-                     when 4 =>
+                     when "100" =>
                          Enable_VDD_pix <= '0';
-                     when 5 =>
+                     when "101" =>
                          Enable_VDD_33 <= '0';
-                     when 6 =>
+                     when "110" =>
                          Enable_VDD_18 <= '0';
-                     when 7 =>   
+                     when "111" =>   
                          C5514_enable <= '0';
                          state <= off;
-                         enable_pins <= 0;
+                         enable_pins    <= (others => '0');
                          counter <= 0;
                     when others =>
                   end case;
             else
                counter <= 0;
                state <= power_up_seq;
-               enable_pins <= 8-enable_pins;
+               enable_pins    <= ("111"-enable_pins)+'1';
             end if;
          else
             state <= power_up_seq;

@@ -69,8 +69,7 @@ begin
       when ready =>
          if en_in = '1' then
             if sw_in = '1' then
-               state <= power_up_seq;
-               StopCount <= '0';  
+               state <= power_up_seq; 
             else 
                state <=off ;
             end if;
@@ -84,8 +83,6 @@ begin
             state <= off;
                if sw_in = '1' then
                   state <= power_up_seq;
-                  StopCount <= '0';
-                   
                elsif (sw_in = '0' or sw_in = 'U') then
                   counter        <= 0;
                   C5514_enable   <= '0';

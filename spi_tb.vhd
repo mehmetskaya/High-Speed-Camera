@@ -5,14 +5,14 @@ use IEEE.STD_LOGIC_1164.ALL;
 -- arithmetic functions with Signed or Unsigned values
 --USE ieee.numeric_std.ALL;
  
-entity myspi_tb is
-end myspi_tb;
+entity spi_tb is
+end spi_tb;
  
-architecture Behavioral of myspi_tb is
+architecture Behavioral of spi_tb is
  
     -- Component Declaration for the Unit Under Test (UUT)
  
-    component myspi
+    component spi
     port(
          clk : IN  std_logic;
          sck : IN  std_logic;

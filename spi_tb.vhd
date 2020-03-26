@@ -52,7 +52,7 @@ architecture Behavioral of spi_tb is
 begin
  
 	-- Instantiate the Unit Under Test (UUT)
-   uut: myspi port map (
+   uut: spi port map (
           clk => clk,
           sck => sck,
           ss => ss,

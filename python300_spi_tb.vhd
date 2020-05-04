@@ -59,7 +59,7 @@ ARCHITECTURE behavior OF python300_spi_tb IS
    constant clk_period : time := 2.78 ns;
    constant sck_period : time := 83.4 ns;
  
-BEGIN
+begin
  
 	-- Instantiate the Unit Under Test (UUT)
    uut: python300_spi 
@@ -155,4 +155,4 @@ BEGIN
       
    end process;
 
-END;
+end;

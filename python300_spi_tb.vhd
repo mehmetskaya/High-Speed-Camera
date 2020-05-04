@@ -63,7 +63,7 @@ begin
  
 	-- Instantiate the Unit Under Test (UUT)
    uut: python300_spi 
-   PORT MAP (
+   port map (
           clk      => clk,
           enable_n => enable_n,
           sck_in   => sck_in,

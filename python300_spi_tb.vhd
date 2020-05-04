@@ -5,15 +5,15 @@ USE ieee.std_logic_1164.ALL;
 -- arithmetic functions with Signed or Unsigned values
 --USE ieee.numeric_std.ALL;
  
-ENTITY python300_spi_tb IS
-END python300_spi_tb;
+entity python300_spi_tb is
+end python300_spi_tb;
  
-ARCHITECTURE behavior OF python300_spi_tb IS 
+architecture behavior of python300_spi_tb is 
  
     -- Component Declaration for the Unit Under Test (UUT)
  
-    COMPONENT python300_spi
-    PORT(
+    component python300_spi
+    port(
          clk : IN  std_logic;
          enable_n : IN  std_logic;
          sck_in : IN  std_logic;
@@ -29,7 +29,7 @@ ARCHITECTURE behavior OF python300_spi_tb IS
          tx_empty : OUT  std_logic;
          rx_full : OUT  std_logic
         );
-    END COMPONENT;
+    end component;
     
 
    --Inputs
